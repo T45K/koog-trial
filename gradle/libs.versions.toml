@@ -1,8 +1,10 @@
 [versions]
 junit-jupiter-engine = "6.0.1"
+koog = "0.5.2"
 
 [libraries]
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit-jupiter-engine" }
+koog-agents = { module = "ai.koog:koog-agents", version.ref = "koog" }
 
 [plugins]
-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "2.2.21" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "2.3.0-Beta2" }

@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.kotlin.jvm)
 }
@@ -7,6 +9,8 @@ repositories {
 }
 
 dependencies {
+    implementation(libs.koog.agents)
+
     testImplementation("org.jetbrains.kotlin:kotlin-test")
 
     testImplementation(libs.junit.jupiter.engine)
