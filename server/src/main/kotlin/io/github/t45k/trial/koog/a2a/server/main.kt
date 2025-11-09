@@ -1,4 +1,4 @@
-package io.github.t45k.koogTrial
+package io.github.t45k.trial.koog.a2a.server
 
 import ai.koog.a2a.model.AgentCapabilities
 import ai.koog.a2a.model.AgentCard
