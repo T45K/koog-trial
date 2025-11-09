@@ -5,6 +5,9 @@ koog = "0.5.2"
 [libraries]
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit-jupiter-engine" }
 koog-agents = { module = "ai.koog:koog-agents", version.ref = "koog" }
+koog-a2a-core = { module = "ai.koog:a2a-core", version.ref = "koog" }
+koog-a2a-server = { module = "ai.koog:a2a-server", version.ref = "koog" }
+koog-a2a-transport-server = { module = "ai.koog:a2a-transport-server-jsonrpc-http", version.ref = "koog" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "2.3.0-Beta2" }
