@@ -24,6 +24,7 @@ suspend fun main() {
     val agentCard = client.cachedAgentCard()
     println("Connected to: ${agentCard.name}")
     println("Supports streaming: ${agentCard.capabilities.streaming}")
+    println(agentCard.skills)
 
     val message = Message(
         messageId = UUID.randomUUID().toString(),

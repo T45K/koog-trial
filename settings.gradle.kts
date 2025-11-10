@@ -4,4 +4,4 @@ plugins {
 
 rootProject.name = "koog-trial"
 
-include("server", "client")
+include("server", "client", "agent")
