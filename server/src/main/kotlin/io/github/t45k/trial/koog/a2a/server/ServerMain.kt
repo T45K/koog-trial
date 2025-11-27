@@ -6,6 +6,11 @@ import ai.koog.a2a.model.AgentSkill
 import ai.koog.a2a.model.Message
 import ai.koog.a2a.model.MessageSendParams
 import ai.koog.a2a.model.Role
+import ai.koog.a2a.model.Task
+import ai.koog.a2a.model.TaskEvent
+import ai.koog.a2a.model.TaskState
+import ai.koog.a2a.model.TaskStatus
+import ai.koog.a2a.model.TaskStatusUpdateEvent
 import ai.koog.a2a.model.TextPart
 import ai.koog.a2a.server.A2AServer
 import ai.koog.a2a.server.agent.AgentExecutor
@@ -62,14 +67,69 @@ class SayHelloWorldAgentExecutor : AgentExecutor {
         context: RequestContext<MessageSendParams>,
         eventProcessor: SessionEventProcessor,
     ) {
+        eventProcessor.sendTaskEvent(
+            Task(
+                id = context.taskId,
+                contextId = context.contextId,
+                status = TaskStatus(TaskState.Submitted),
+            )
+        )
+
+        eventProcessor.sendTaskEvent(
+            TaskStatusUpdateEvent(
+                taskId = context.taskId,
+                contextId = context.contextId,
+                status = TaskStatus(
+                    state = TaskState.Submitted,
+                    message = Message(
+                        messageId = UUID.randomUUID().toString(),
+                        role = Role.Agent,
+                        parts = listOf(TextPart("Hello World from server")),
+                        contextId = context.contextId,
+                        taskId = context.taskId
+                    )
+                ),
+                final = false
+            )
+        )
+
+        eventProcessor.sendTaskEvent(
+            TaskStatusUpdateEvent(
+                taskId = context.taskId,
+                contextId = context.contextId,
+                status = TaskStatus(
+                    state = TaskState.Working,
+                    message = Message(
+                        messageId = UUID.randomUUID().toString(),
+                        role = Role.Agent,
+                        parts = listOf(TextPart("Hello World from server 2")),
+                        contextId = context.contextId,
+                        taskId = context.taskId
+                    )
+                ),
+                final = false
+            )
+        )
+
+        eventProcessor.sendTaskEvent(
+            TaskStatusUpdateEvent(
+                taskId = context.taskId,
+                contextId = context.contextId,
+                status = TaskStatus(TaskState.Completed),
+                final = true,
+            )
+        )
+
+        /*
         val response = Message(
             messageId = UUID.randomUUID().toString(),
             role = Role.Agent,
-            parts = listOf(TextPart("Hello World")),
+            parts = listOf(TextPart("Hello World from server")),
             contextId = context.contextId,
             taskId = context.taskId
         )
 
-        eventProcessor.sendMessage(response)
+        eventProcessor.sendMessage(response
+         */
     }
 }

@@ -6,6 +6,7 @@ import ai.koog.a2a.model.Message
 import ai.koog.a2a.model.MessageSendParams
 import ai.koog.a2a.model.Role
 import ai.koog.a2a.model.Task
+import ai.koog.a2a.model.TaskStatusUpdateEvent
 import ai.koog.a2a.model.TextPart
 import ai.koog.a2a.transport.Request
 import ai.koog.a2a.transport.client.jsonrpc.http.HttpJSONRPCClientTransport
@@ -23,8 +24,6 @@ suspend fun main() {
     client.connect()
     val agentCard = client.cachedAgentCard()
     println("Connected to: ${agentCard.name}")
-    println("Supports streaming: ${agentCard.capabilities.streaming}")
-    println(agentCard.skills)
 
     val message = Message(
         messageId = UUID.randomUUID().toString(),
@@ -34,19 +33,29 @@ suspend fun main() {
     )
 
     val request = Request(data = MessageSendParams(message))
-    val response = client.sendMessage(request)
+    val response = client.sendMessageStreaming(request)
 
-    when (val event = response.data) {
-        is Message -> {
-            val text = event.parts
-                .filterIsInstance<TextPart>()
-                .joinToString { it.text }
-            print(text)
-        }
+    response.collect {
+        when (val event = it.data) {
+            is Message -> {
+                val text = event.parts
+                    .filterIsInstance<TextPart>()
+                    .joinToString { it.text }
+                println(text)
+            }
 
-        is Task -> {
-            if (event.status.state.terminal) {
-                println("\nTask completed")
+            is TaskStatusUpdateEvent -> {
+                event.status.message?.parts
+                    ?.filterIsInstance<TextPart>()
+                    ?.joinToString { it.text }
+                    ?.let { println(it) }
+
+                if (event.final) {
+                    println("\nTask completed")
+                }
+            }
+
+            else -> {
             }
         }
     }
