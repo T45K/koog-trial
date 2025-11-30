@@ -7,11 +7,15 @@ import ai.koog.prompt.executor.clients.google.GoogleModels.Gemini2_5Flash
 import ai.koog.prompt.executor.llms.all.simpleGoogleAIExecutor
 import io.github.t45k.koog.tool.GoogleSearchTool
 
-fun createWithoutTools(geminiApiKey: String) = create(geminiApiKey) {}
+typealias AIAgentFactory = () -> AIAgent<String, String>
 
-fun createWithGoogleSearchTool(geminiApiKey: String, googleCustomSearchApiKey: String, cx: String) =
-    create(geminiApiKey) {
-        tool(GoogleSearchTool(apiKey = googleCustomSearchApiKey, cx = cx))
+fun createWithoutTools(geminiApiKey: String): AIAgentFactory = { create(geminiApiKey) {} }
+
+fun createWithGoogleSearchTool(geminiApiKey: String, googleCustomSearchApiKey: String, cx: String): AIAgentFactory =
+    {
+        create(geminiApiKey) {
+            tool(GoogleSearchTool(apiKey = googleCustomSearchApiKey, cx = cx))
+        }
     }
 
 private fun create(geminiApiKey: String, toolRegistry: ToolRegistry.Builder.() -> Unit) = AIAgent(

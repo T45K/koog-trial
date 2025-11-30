@@ -1,12 +1,12 @@
 package io.github.t45k.trial.koog.a2a.server
 
-import ai.koog.agents.core.agent.AIAgent
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
-class RequestClassifierAgent(private val aiAgent: AIAgent<String, String>) {
+class RequestClassifierAgent(private val aiAgentFactory: AIAgentFactory) {
 
     suspend fun execute(request: String): RequestClassification {
+        val aiAgent = aiAgentFactory()
         val classificationPrompt = """
             You are an assistant that classifies input.
             Analyze the user input below and return the result in JSON format.

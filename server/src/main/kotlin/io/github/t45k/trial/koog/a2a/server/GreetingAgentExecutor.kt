@@ -7,10 +7,9 @@ import ai.koog.a2a.model.Role
 import ai.koog.a2a.model.TextPart
 import ai.koog.a2a.server.session.RequestContext
 import ai.koog.a2a.server.session.SessionEventProcessor
-import ai.koog.agents.core.agent.AIAgent
 import java.util.UUID
 
-class GreetingAgentExecutor(private val aiAgent: AIAgent<String, String>) {
+class GreetingAgentExecutor(private val aiAgentFactory: AIAgentFactory) {
     companion object {
         val skill = AgentSkill(
             id = "greetings",
@@ -28,6 +27,7 @@ class GreetingAgentExecutor(private val aiAgent: AIAgent<String, String>) {
         context: RequestContext<MessageSendParams>,
         eventProcessor: SessionEventProcessor,
     ) {
+        val aiAgent = aiAgentFactory()
         val greetingPrompt = """
             You are a helpful assistant.
             When greeted by a user, respond with an appropriate greeting in the same language.

@@ -11,10 +11,9 @@ import ai.koog.a2a.model.TaskStatusUpdateEvent
 import ai.koog.a2a.model.TextPart
 import ai.koog.a2a.server.session.RequestContext
 import ai.koog.a2a.server.session.SessionEventProcessor
-import ai.koog.agents.core.agent.AIAgent
 import java.util.UUID
 
-class WeatherSearchAgentExecutor(private val googleSearchToolAgent: AIAgent<String, String>) {
+class WeatherSearchAgentExecutor(private val googleSearchToolAgentFactory: AIAgentFactory) {
     companion object {
         val skill = AgentSkill(
             id = "weather-search",
@@ -84,6 +83,7 @@ class WeatherSearchAgentExecutor(private val googleSearchToolAgent: AIAgent<Stri
             )
         )
 
+        val googleSearchToolAgent = googleSearchToolAgentFactory()
         val weatherPrompt = """
             You are an assistant that searches for weather information.
             Please use the GoogleSearchTool to search for the following weather information.
