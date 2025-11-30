@@ -24,33 +24,36 @@ suspend fun main() {
 
     client.connect()
     val agentCard = client.cachedAgentCard()
+
     println("=".repeat(60))
     println("Connected to: ${agentCard.name}")
     println("Skills: ${agentCard.skills.joinToString { it.name }}")
     println("=".repeat(60))
 
+    val contextId = UUID.randomUUID().toString()
+
     // Test 1: German greeting
     println("\n【Test 1】ドイツ語で挨拶を送る")
     println("-".repeat(60))
-    sendMessageAndPrintResponse(client, "Guten Tag! Wie geht es Ihnen?")
+    sendMessageAndPrintResponse(client, "Guten Tag! Wie geht es Ihnen?", contextId)
     println("→ 期待: Greetings Skillが利用され、ドイツ語で挨拶が返ってくる")
 
     // Test 2: Weather without location
     println("\n【Test 2】地域を指定せずに天気を訊く")
     println("-".repeat(60))
-    sendMessageAndPrintResponse(client, "今日の天気は何ですか")
+    sendMessageAndPrintResponse(client, "今日の天気は何ですか", contextId)
     println("→ 期待: Weather Search Skillが利用され、地域を指定するように言われる")
 
     // Test 3: Weather with date and location
     println("\n【Test 3】日付と地域を指定して天気を訊く")
     println("-".repeat(60))
-    sendMessageAndPrintResponse(client, "今日の大阪の天気は何ですか")
+    sendMessageAndPrintResponse(client, "今日の大阪の天気は何ですか", contextId)
     println("→ 期待: Weather Search Skillが利用され、天気情報が返ってくる")
 
     // Test 4: Unrelated question (dinner menu)
     println("\n【Test 4】関係ない質問（晩御飯の献立）を送る")
     println("-".repeat(60))
-    sendMessageAndPrintResponse(client, "今日の晩御飯の献立を教えてください")
+    sendMessageAndPrintResponse(client, "今日の晩御飯の献立を教えてください", contextId)
     println("→ 期待: 挨拶か天気について訊くように言われる")
 
     println("\n" + "=".repeat(60))
@@ -58,7 +61,7 @@ suspend fun main() {
     println("=".repeat(60))
 }
 
-private suspend fun sendMessageAndPrintResponse(client: A2AClient, text: String) {
+private suspend fun sendMessageAndPrintResponse(client: A2AClient, text: String, contextId: String) {
     println("📤 送信: $text")
     println()
 
@@ -66,7 +69,7 @@ private suspend fun sendMessageAndPrintResponse(client: A2AClient, text: String)
         messageId = UUID.randomUUID().toString(),
         role = Role.User,
         parts = listOf(TextPart(text)),
-        contextId = "conversation-${UUID.randomUUID()}"
+        contextId = contextId,
     )
 
     val request = Request(data = MessageSendParams(message))
